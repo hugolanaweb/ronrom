@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FeatureList from '../components/FeatureList.astro';
+import WhatsAppLink from '../components/WhatsAppLink.astro';
+import CTASection from '../components/CTASection.astro';
+import { lifeStageLabels, services, servicesNote } from '../data/site';
+import floorPlay from '../assets/photos/floor-play.jpg';
+---
+
+<Base
+  title="Serviços e valores de referência"
+  description="Consulta felina, check-up por fase de vida, vacinas, Programa Sênior, cirurgia, odontologia e atendimento em casa. Valores de referência."
+>
+  <PageHero
+    eyebrow="Serviços"
+    title="Serviços e valores de referência."
+    note="Valores de referência" shape="blob-b"
+    image={floorPlay}
+    imageAlt="Gato laranja e branco deitado de barriga para cima no chão de madeira, com coleira vermelha"
+    imagePosition="50% 88%"
+  >
+    <p>{servicesNote}</p>
+    <nav slot="actions" class="jump" aria-label="Ir para um serviço">
+      {services.map((s) => <a href={`#${s.id}`}>{s.name}</a>)}
+    </nav>
+  </PageHero>
+
+  {
+    services.map((s, i) => (
+      <section
+        id={s.id}
+        class:list={['section', i % 2 === 0 ? 'section--areia' : 'section--creme']}
+        aria-labelledby={`${s.id}-title`}
+      >
+        <div class="container servico reveal">
+          <header class="servico__head">
+            <p class="servico__stages">
+              {s.stages.map((st) => <span class="tag">{lifeStageLabels[st]}</span>)}
+            </p>
+            <h2 id={`${s.id}-title`}>{s.name}</h2>
+            <p class="servico__price">{s.price}</p>
+            <p class="servico__summary">{s.summary}</p>
+            <WhatsAppLink service={s.name}>Agendar pelo WhatsApp</WhatsAppLink>
+          </header>
+          <div class="servico__cards">
+            <div class="surface">
+              <h3>Para quem</h3>
+              <p>{s.forWhom}</p>
+            </div>
+            <div class="surface">
+              <h3>O que inclui</h3>
+              <FeatureList items={s.includes} />
+            </div>
+            <div class="surface">
+              <h3>O que não inclui</h3>
+              <FeatureList items={s.excludes} variant="x" />
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <CTASection />
+</Base>
+
+<style>
+  .jump { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s-4);
+    border: 2px solid var(--noite);
+    border-radius: var(--r-pill);
+    color: var(--noite);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+  }
+  .jump a:hover { background: var(--noite); color: var(--creme); }
+
+  .servico { display: grid; gap: var(--s-7); align-items: start; }
+  @media (min-width: 1024px) { .servico { grid-template-columns: 4fr 8fr; gap: var(--s-8); } }
+  .servico__stages { display: flex; flex-wrap: wrap; gap: var(--s-1); margin: 0 0 var(--s-4); }
+  .servico__head h2 { margin-bottom: var(--s-3); }
+  .servico__price {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--terracota-funda);
+    margin-bottom: var(--s-3);
+  }
+  .servico__summary { color: var(--text-muted); margin-bottom: var(--s-5); }
+  .servico__cards { display: grid; gap: var(--s-4); }
+  @media (min-width: 768px) {
+    .servico__cards { grid-template-columns: 1fr 1fr; }
+    .servico__cards .surface:first-child { grid-column: 1 / -1; }
+  }
+  .servico__cards h3 { font-size: 1.125rem; margin-bottom: var(--s-3); }
+</style>

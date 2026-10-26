@@ -1,0 +1,145 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import CatMark from './CatMark.astro';
+
+/**
+ * Foto em moldura de arco (topo semicircular). Sem `src`, mostra um placeholder
+ * com a proporção correta e a descrição da foto prevista.
+ */
+interface Props {
+  src?: ImageMetadata;
+  alt: string;
+  /** Largura / altura. Padrão 4/5. */
+  ratio?: number;
+  caption?: string;
+  /** Hero: carrega com prioridade e entra com fade (sem clip), para não atrasar o LCP. */
+  priority?: boolean;
+  /** Enquadramento do recorte, como em object-position. */
+  position?: string;
+  maxWidth?: number;
+  /** Forma da moldura: arco ou blobs orgânicos. */
+  shape?: 'arch' | 'blob-a' | 'blob-b' | 'blob-c';
+  class?: string;
+}
+const shapes = {
+  arch: '999px 999px 20px 20px',
+  'blob-a': '63% 37% 54% 46% / 55% 48% 52% 45%',
+  'blob-b': '38% 62% 49% 51% / 52% 41% 59% 48%',
+  'blob-c': '52% 48% 38% 62% / 60% 44% 56% 40%',
+};
+const {
+  src,
+  alt,
+  ratio = 4 / 5,
+  caption,
+  priority = false,
+  position = 'center',
+  maxWidth = 420,
+  shape = 'arch',
+  class: className,
+} = Astro.props;
+---
+
+<figure class:list={['arch', 'reveal-host', className]} style={`--ratio:${ratio};--max:${maxWidth}px;--shape:${shapes[shape]}`}>
+  <div class:list={['arch__frame', priority ? 'arch__frame--hero' : 'arch__frame--clip']}>
+    {
+      src ? (
+        <Picture
+          src={src}
+          alt={alt}
+          formats={['avif', 'webp']}
+          widths={[360, 540, 720, 960]}
+          sizes={`(min-width: 1024px) ${maxWidth}px, 90vw`}
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : 'auto'}
+          decoding={priority ? 'sync' : 'async'}
+          style={`object-position:${position}`}
+        />
+      ) : (
+        <div class="arch__ph" role="img" aria-label={alt}>
+          <CatMark size={88} />
+          <span class="arch__ph-label">[Foto: {alt}]</span>
+        </div>
+      )
+    }
+  </div>
+  {caption && <figcaption class="arch__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .arch { margin: 0 auto; position: relative; z-index: 1; width: 100%; max-width: var(--max); }
+  .arch__frame {
+    aspect-ratio: var(--ratio);
+    border-radius: var(--shape);
+    overflow: hidden;
+    background: var(--areia);
+  }
+  .arch__frame { position: relative; }
+  /* Véu quente leve: aproxima as fotos da paleta. */
+  .arch__frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(232 176 74 / 0.1), rgb(178 83 46 / 0.12));
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+  .arch__frame :global(picture) { display: block; width: 100%; height: 100%; }
+  .arch__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.001);
+    transition: transform 1200ms var(--ease);
+  }
+  .arch:hover .arch__frame :global(img) { transform: scale(1.035); }
+
+  .arch__ph {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-4);
+    padding: var(--s-6);
+    text-align: center;
+    color: var(--terracota-funda);
+    background:
+      radial-gradient(120% 80% at 20% 10%, #f6dcc0 0%, transparent 60%),
+      linear-gradient(180deg, #efd2b0 0%, #d9a47c 100%);
+  }
+  .arch__ph-label {
+    font-size: var(--fs-small);
+    color: var(--noite);
+    background: rgb(251 245 236 / 0.85);
+    padding: var(--s-1) var(--s-3);
+    border-radius: var(--r-pill);
+    max-width: 90%;
+  }
+  .arch__caption { margin-top: var(--s-3); font-size: var(--fs-small); color: var(--text-muted); }
+  .section--noite .arch__caption { color: var(--areia); }
+
+  /* O arco revela a foto de baixo para cima (a figura é o alvo do observador). */
+  :global(.js .reveal-host .arch__frame--clip) {
+    clip-path: inset(100% 0 0 0 round var(--shape));
+    transition: clip-path 900ms var(--ease);
+  }
+  :global(.js .reveal-host.is-visible .arch__frame--clip) {
+    clip-path: inset(0 0 0 0 round var(--shape));
+  }
+
+  /* Hero: entra com fade e leve assentamento. */
+  .arch__frame--hero { animation: arch-in 700ms var(--ease) both; }
+  @keyframes arch-in {
+    from { opacity: 0.4; transform: translateY(12px) scale(0.99); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js .reveal-host .arch__frame--clip) { clip-path: none; transition: none; }
+    .arch__frame--hero { animation: none; }
+    .arch:hover .arch__frame :global(img) { transform: none; }
+  }
+</style>

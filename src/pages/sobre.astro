@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import ArchImage from '../components/ArchImage.astro';
+import CTASection from '../components/CTASection.astro';
+import { principles, site } from '../data/site';
+import windowSunset from '../assets/photos/window-sunset.jpg';
+---
+
+<Base
+  title="Por que só gatos"
+  description="Gatos não são cães pequenos. Uma clínica dedicada permite organizar espaço, agenda e conhecimento da equipe em torno do jeito de ser do gato."
+>
+  <PageHero
+    eyebrow="Sobre a Ronrom"
+    title="Por que só gatos."
+    note="Só gatos" shape="blob-b"
+    image={windowSunset}
+    imageAlt="Gato dormindo em um parapeito de janela, com luz dourada de fim de tarde"
+    imagePosition="60% 62%"
+  >
+    <p>
+      Gatos não são cães pequenos. Reagem de outro jeito à dor, ao medo e aos remédios, e escondem sinais
+      de doença até o último momento. Uma clínica dedicada permite organizar o espaço, a agenda e o
+      conhecimento da equipe em torno disso.
+    </p>
+    <Fragment slot="actions">
+      <Button href="/a-visita">Ver como é a visita</Button>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--noite" aria-labelledby="valores-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">O que nos guia</p>
+        <h2 id="valores-title">Nossos valores</h2>
+      </div>
+      <ul class="cards cards--2 stagger valores">
+        {
+          principles.map((p, i) => (
+            <li class="valor lift">
+              <span class="valor__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <p>{p}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--areia" aria-labelledby="equipe-title">
+    <div class="container split split--flip">
+      <div class="split__media">
+        <ArchImage
+          alt="Moldura reservada para a foto da equipe (pendente)"
+          ratio={4 / 5}
+          maxWidth={320}
+          caption={site.team.photoCaption}
+        />
+      </div>
+      <div class="reveal">
+        <div class="section-head">
+          <p class="eyebrow">Quem cuida</p>
+          <h2 id="equipe-title">Equipe</h2>
+        </div>
+        <p class="equipe__name">{site.team.name} · {site.team.role} · {site.team.crmv}</p>
+        <p class="muted">[Apresentação da equipe: pendente]</p>
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</Base>
+
+<style>
+  .valor {
+    display: flex;
+    gap: var(--s-5);
+    align-items: baseline;
+    padding: var(--s-6);
+    border-radius: var(--r-md);
+    background: rgb(251 245 236 / 0.07);
+    border: 1px solid rgb(251 245 236 / 0.16);
+  }
+  .valor:hover { background: rgb(251 245 236 / 0.12); }
+  .valor__n {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--mel);
+  }
+  .valor p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--creme);
+  }
+  .equipe__name { font-size: 1.25rem; font-weight: 600; }
+</style>

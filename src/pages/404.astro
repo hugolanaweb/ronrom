@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+---
+
+<Base title="Página não encontrada" description="A página que você procura não existe." noindex>
+  <PageHero eyebrow="Erro 404" title="Esta página saiu para passear.">
+    <p>Não encontramos o endereço que você abriu. Volte ao início ou agende uma consulta.</p>
+    <Fragment slot="actions">
+      <Button href="/">Voltar ao início</Button>
+      <Button href="/agendar" variant="outline">Agendar consulta</Button>
+    </Fragment>
+  </PageHero>
+</Base>

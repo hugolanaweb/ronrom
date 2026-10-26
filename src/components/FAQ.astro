@@ -1,0 +1,46 @@
+---
+import type { FaqItem } from '../data/site';
+
+interface Props {
+  items: FaqItem[];
+}
+const { items } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item) => (
+      <details>
+        <summary>
+          <span>{item.q}</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M7 4l6 6-6 6" />
+          </svg>
+        </summary>
+        <p>{item.a}</p>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq { max-width: 760px; border-top: 1px solid #e0d4c0; }
+  details { border-bottom: 1px solid #e0d4c0; }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-4);
+    min-height: 64px;
+    padding: var(--s-3) var(--s-2);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--t-fast) var(--ease);
+  }
+  summary:hover { color: var(--terracota-funda); }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { flex: none; transition: transform var(--t-base) var(--ease); color: var(--terracota); }
+  details[open] summary svg { transform: rotate(90deg); }
+  details p { padding: 0 var(--s-2) var(--s-5); margin: 0; color: var(--text-muted); }
+</style>

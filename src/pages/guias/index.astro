@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import gingerFloor from '../../assets/photos/ginger-floor.jpg';
+
+const guias = (await getCollection('guias')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="Guias" description="Guias da Ronrom para tutores: preparo e cuidado do gato, em linguagem simples.">
+  <PageHero
+    eyebrow="Guias"
+    title="Guias para tutores."
+    note="Sem jargão" shape="blob-c"
+    image={gingerFloor}
+    imageAlt="Gato laranja deitado no chão de madeira, com o olhar tranquilo"
+    imagePosition="25% 50%"
+  >
+    <p>Textos curtos, sem jargão, para você se preparar antes de sair de casa.</p>
+  </PageHero>
+
+  <section class="section section--areia" aria-labelledby="lista-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Leitura</p>
+        <h2 id="lista-title">Todos os guias</h2>
+      </div>
+      <ul class="cards cards--2 stagger">
+        {
+          guias.map((g) => (
+            <li class="guia lift">
+              <a href={`/guias/${g.id}`} class="guia__link">
+                {g.data.cover && (
+                  <div class="guia__thumb">
+                    <Picture
+                      src={g.data.cover}
+                      alt=""
+                      formats={['avif', 'webp']}
+                      widths={[420, 640, 860]}
+                      sizes="(min-width: 768px) 520px, 90vw"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div class="guia__body">
+                  <h3>{g.data.title}</h3>
+                  <p class="muted">{g.data.description}</p>
+                  <span class="guia__more">Ler guia <span aria-hidden="true">→</span></span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CTASection />
+</Base>
+
+<style>
+  .guia { background: var(--creme); border-radius: var(--r-md); overflow: hidden; }
+  .guia:hover { background: var(--branco); }
+  .guia__link { display: flex; flex-direction: column; height: 100%; color: var(--noite); text-decoration: none; }
+  .guia__thumb { aspect-ratio: 16 / 9; overflow: hidden; background: var(--areia); }
+  .guia__thumb :global(picture), .guia__thumb :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .guia__thumb :global(img) { object-position: 46% 50%; transition: transform 900ms var(--ease); }
+  .guia:hover .guia__thumb :global(img) { transform: scale(1.04); }
+  .guia__body { padding: var(--s-6); display: flex; flex-direction: column; flex: 1; }
+  .guia h3 { font-size: 1.5rem; margin-bottom: var(--s-2); }
+  .guia__body p { flex: 1; }
+  .guia__more { font-weight: 600; color: var(--terracota); }
+  @media (prefers-reduced-motion: reduce) { .guia:hover .guia__thumb :global(img) { transform: none; } }
+</style>

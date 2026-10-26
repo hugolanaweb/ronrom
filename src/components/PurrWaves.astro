@@ -1,0 +1,53 @@
+---
+/** Ondas de ronrom: anéis concêntricos finos pulsando (3 s). Puramente decorativo. */
+interface Props {
+  tone?: 'salvia' | 'light';
+  class?: string;
+}
+const { tone = 'salvia', class: className } = Astro.props;
+---
+
+<div class:list={['purr', `purr--${tone}`, className]} aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<style>
+  .purr {
+    position: absolute;
+    width: min(760px, 120vw);
+    aspect-ratio: 1;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .purr span {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    opacity: 0;
+    transform: scale(0.35);
+    animation: purr var(--t-wave) var(--ease) infinite;
+  }
+  .purr span:nth-child(2) { animation-delay: 0.6s; }
+  .purr span:nth-child(3) { animation-delay: 1.2s; }
+  .purr span:nth-child(4) { animation-delay: 1.8s; }
+  .purr span:nth-child(5) { animation-delay: 2.4s; }
+  .purr--salvia { color: var(--salvia); }
+  .purr--light { color: rgb(255 255 255 / 0.55); }
+
+  @keyframes purr {
+    0% { opacity: 0; transform: scale(0.35); }
+    20% { opacity: 0.85; }
+    100% { opacity: 0; transform: scale(1); }
+  }
+
+  /* Movimento reduzido: anéis estáticos */
+  @media (prefers-reduced-motion: reduce) {
+    .purr span { animation: none !important; opacity: 0.45; }
+    .purr span:nth-child(1) { transform: scale(0.4); }
+    .purr span:nth-child(2) { transform: scale(0.55); }
+    .purr span:nth-child(3) { transform: scale(0.7); }
+    .purr span:nth-child(4) { transform: scale(0.85); }
+    .purr span:nth-child(5) { transform: scale(1); }
+  }
+</style>

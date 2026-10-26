@@ -1,0 +1,30 @@
+---
+/** Símbolo do gato enrolado. Decorativo por padrão; passe `label` para torná-lo informativo. */
+interface Props {
+  size?: number;
+  label?: string;
+}
+const { size = 40, label } = Astro.props;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+>
+  <path d="M14 36c0-9 8-14 18-14s20 5 20 16c0 9-8 15-19 15H22" />
+  <path d="M52 40c4 8-2 14-12 14" />
+  <circle cx="21" cy="32" r="9" />
+  <path d="M14 26l-1-9 7 5" />
+  <path d="M27 24l3-8 4 7" />
+  <path d="M18 33h.01M24 33h.01" stroke-width="4" />
+</svg>

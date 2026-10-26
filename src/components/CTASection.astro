@@ -1,0 +1,68 @@
+---
+import Button from './Button.astro';
+import ArchImage from './ArchImage.astro';
+import Icon from './Icon.astro';
+import PurrWaves from './PurrWaves.astro';
+import { site, whatsappUrl } from '../data/site';
+import goldenPortrait from '../assets/photos/golden-portrait.jpg';
+
+interface Props {
+  title?: string;
+  text?: string;
+  service?: string;
+}
+const {
+  title = 'Vamos marcar no ritmo dele?',
+  text = 'Escolha o melhor horário. A gente envia o guia de preparo assim que confirmar.',
+  service,
+} = Astro.props;
+---
+
+<section class="section section--terracota cta" aria-labelledby="cta-title">
+  <div class="container cta__grid">
+    <div class="cta__text reveal">
+      <p class="eyebrow">Agendamento</p>
+      <h2 id="cta-title">{title}</h2>
+      <p class="cta__lead">{text}</p>
+      <div class="cta__actions">
+        <Button href={whatsappUrl({ service })} variant="light" external>
+          <Icon name="whatsapp" size={20} /> Agendar pelo WhatsApp
+        </Button>
+        <Button href="/a-visita" variant="outline-light">Ver como é a visita</Button>
+      </div>
+      <p class="cta__meta"><Icon name="pin" size={18} /> Seg. a sáb., {site.contact.hours} · {site.contact.neighborhood}, Porto Alegre</p>
+    </div>
+
+    <div class="cta__media" aria-hidden="true">
+      <PurrWaves tone="light" class="cta__waves" />
+      <ArchImage
+        src={goldenPortrait}
+        alt=""
+        shape="blob-a"
+        ratio={1}
+        maxWidth={380}
+        position="50% 30%"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta__grid { display: grid; gap: var(--s-7); align-items: center; }
+  @media (min-width: 900px) { .cta__grid { grid-template-columns: 6fr 5fr; gap: var(--s-8); } }
+  .cta__text { position: relative; z-index: 1; max-width: 560px; }
+  .cta__text h2 { max-width: 14ch; margin-bottom: var(--s-4); }
+  .cta__text .eyebrow { margin-bottom: var(--s-3); }
+  .cta__lead { font-size: 1.1875rem; max-width: 40ch; margin-bottom: var(--s-6); }
+  .cta__actions { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); }
+  .cta__meta { display: flex; align-items: center; gap: var(--s-2); margin: var(--s-6) 0 0; font-size: var(--fs-small); }
+
+  .cta__media { position: relative; display: none; place-items: center; }
+  @media (min-width: 900px) { .cta__media { display: grid; } }
+  .cta__media :global(.cta__waves) { left: 50%; top: 50%; translate: -50% -50%; }
+  .cta__media :global(.arch) { filter: none; }
+
+  @media (max-width: 899px) {
+    .cta__actions { flex-direction: column; align-items: stretch; }
+  }
+</style>

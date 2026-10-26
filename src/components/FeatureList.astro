@@ -1,0 +1,13 @@
+---
+/** Lista de itens com marcador. `variant="x"` para o que NÃO está incluído. */
+interface Props {
+  items: string[];
+  variant?: 'check' | 'x';
+  class?: string;
+}
+const { items, variant = 'check', class: className } = Astro.props;
+---
+
+<ul class:list={['check-list', variant === 'x' && 'check-list--x', className]}>
+  {items.map((item) => <li>{item}</li>)}
+</ul>

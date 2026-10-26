@@ -1,0 +1,172 @@
+---
+import { nav, site } from '../data/site';
+import Button from './Button.astro';
+import CatMark from './CatMark.astro';
+import Icon from './Icon.astro';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => current === href || current.startsWith(href + '/');
+---
+
+<header class="header">
+  <div class="container header__bar">
+    <a class="logo" href="/">
+      <CatMark size={36} />
+      <span class="logo__text">
+        <span class="logo__name">{site.brand}</span>
+        <span class="logo__sub">Clínica Felina</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Principal" id="site-nav" data-nav>
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <Button href="/agendar" class="header__cta">
+      Agendar consulta <Icon name="calendar" size={18} />
+    </Button>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+    >
+      <span class="visually-hidden">Menu</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path class="bars" d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgb(251 245 236 / 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-base) var(--ease);
+  }
+  .header.is-scrolled { border-bottom-color: var(--areia); }
+  .header__bar { display: flex; align-items: center; gap: var(--s-5); min-height: 76px; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    color: var(--noite);
+    text-decoration: none;
+    margin-right: auto;
+    min-height: 44px;
+  }
+  .logo:hover { color: var(--terracota); }
+  .logo__text { display: grid; line-height: 1; }
+  .logo__name {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-weight: 600;
+    font-size: 1.75rem;
+  }
+  .logo__sub { margin-top: 3px; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; color: var(--ardosia); text-transform: uppercase; }
+
+  .nav ul { display: flex; gap: var(--s-1); list-style: none; }
+  .nav a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    color: var(--noite);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+  }
+  .nav a::after {
+    content: '';
+    position: absolute;
+    left: var(--s-3); right: var(--s-3); bottom: 6px;
+    height: 2px;
+    background: var(--terracota);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--t-base) var(--ease);
+  }
+  .nav a:hover { color: var(--terracota-funda); }
+  .nav a:hover::after, .nav a[aria-current='page']::after { transform: scaleX(1); }
+
+  .header :global(.header__cta) { min-height: 44px; padding: 0 var(--s-5); font-size: 0.9375rem; }
+  .menu-toggle {
+    display: none;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 2px solid var(--noite);
+    border-radius: var(--r-pill);
+    color: var(--noite);
+    cursor: pointer;
+  }
+
+  /* Telas menores: menu em painel; CTA fica na barra inferior. */
+  @media (max-width: 1023px) {
+    .header :global(.header__cta) { display: none; }
+    .menu-toggle { display: inline-flex; }
+    :global(.js) .nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--creme);
+      border-bottom: 1px solid var(--areia);
+      padding: var(--s-4) var(--gutter) var(--s-5);
+    }
+    :global(.js) .nav.is-open { display: block; }
+    .nav ul { flex-direction: column; gap: 0; }
+    .nav a { width: 100%; font-size: 1.125rem; }
+    .nav a::after { left: 0; right: auto; width: 32px; }
+    :global(html:not(.js)) .header__bar { flex-wrap: wrap; padding-block: var(--s-3); }
+    :global(html:not(.js)) .menu-toggle { display: none; }
+    :global(html:not(.js)) .nav { width: 100%; order: 3; }
+    :global(html:not(.js)) .nav ul { flex-direction: row; flex-wrap: wrap; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  if (toggle && nav) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('is-open', open);
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    nav.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (m) => {
+      if (m.matches) setOpen(false);
+    });
+  }
+</script>

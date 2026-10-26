@@ -1,0 +1,67 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'outline' | 'text' | 'light' | 'outline-light' | 'dark';
+  type?: 'button' | 'submit';
+  external?: boolean;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { href, variant = 'primary', type = 'button', external = false, class: className, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+const attrs = href
+  ? { href, ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}) }
+  : { type };
+---
+
+<Tag class:list={['btn', `btn--${variant}`, className]} {...attrs} {...rest}>
+  <slot />
+</Tag>
+
+<style is:global>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: var(--btn-h);
+    min-width: 44px;
+    padding: 0 var(--s-6);
+    border: 2px solid transparent;
+    border-radius: var(--r-pill);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+      border-color var(--t-fast) var(--ease);
+  }
+  .btn--primary { background: var(--terracota); color: var(--branco); }
+  .btn--primary:hover { background: var(--terracota-funda); color: var(--branco); }
+
+  .btn--outline { background: transparent; color: var(--noite); border-color: var(--noite); }
+  .btn--outline:hover { background: var(--noite); color: var(--creme); }
+
+  .btn--text {
+    padding: 0 var(--s-2);
+    min-height: 44px;
+    color: var(--terracota);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .btn--text:hover { color: var(--terracota-funda); }
+
+  /* Para fundos Terracota e Noite */
+  .btn--light { background: var(--creme); color: var(--noite); }
+  .btn--light:hover { background: var(--areia); color: var(--noite); }
+  .btn--dark { background: var(--noite); color: var(--creme); }
+  .btn--dark:hover { background: #2f4350; color: var(--creme); }
+  .btn--outline-light { background: transparent; color: var(--branco); border-color: var(--branco); }
+  .btn--outline-light:hover { background: var(--branco); color: var(--terracota-funda); }
+  .section--noite .btn--outline-light:hover { color: var(--noite); }
+  .section--noite .btn--text,
+  .section--noite .btn--text:hover { color: var(--mel); }
+</style>

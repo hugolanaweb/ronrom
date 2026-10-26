@@ -1,0 +1,108 @@
+---
+import { footerLinks, site } from '../data/site';
+import CatMark from './CatMark.astro';
+import Icon from './Icon.astro';
+
+const nav = footerLinks.filter((l) => l.href !== '/privacidade');
+const contact = [
+  { icon: 'pin', text: `${site.contact.address}, ${site.contact.neighborhood}, ${site.city} · ${site.state}` },
+  { icon: 'phone', text: site.contact.phone },
+  { icon: 'mail', text: site.contact.email },
+  { icon: 'clock', text: `Seg. a sáb., ${site.contact.hours}` },
+] as const;
+---
+
+<footer class="footer section--noite on-dark">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a class="footer__logo" href="/">
+        <CatMark size={38} />
+        <span class="footer__logo-text">
+          <span class="footer__name">{site.brand}</span>
+          <span class="footer__sub">Clínica Felina</span>
+        </span>
+      </a>
+      <p class="footer__tag">{site.slogan}</p>
+      <p class="footer__pill"><Icon name="paw" size={18} /> Clínica só para gatos</p>
+    </div>
+
+    <nav aria-label="Rodapé" class="footer__col">
+      <h2 class="footer__h">Navegação</h2>
+      <ul>
+        {nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <h2 class="footer__h">Contato</h2>
+      <address>
+        <ul>
+          {
+            contact.map((c) => (
+              <li>
+                <Icon name={c.icon} size={18} />
+                <span>{c.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </address>
+    </div>
+
+    <div class="footer__col footer__alert">
+      <h2 class="footer__h">Emergências</h2>
+      <p><strong>Sem plantão noturno.</strong> Em emergências, procure um hospital veterinário 24 horas.</p>
+    </div>
+  </div>
+
+  <div class="container footer__legal">
+    <p>Responsável técnico {site.legal.technicalLead} {site.legal.crmv} · CNPJ {site.legal.cnpj}</p>
+    <p>{site.concept} · <a href="/privacidade">Política de privacidade</a></p>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-bottom: var(--s-6); font-size: var(--fs-small); }
+  .footer a { color: var(--creme); text-decoration-color: rgb(251 245 236 / 0.4); }
+  .footer a:hover { color: var(--mel); }
+  .footer p { max-width: 44ch; }
+  .footer__grid { display: grid; gap: var(--s-7); padding-bottom: var(--s-7); }
+  @media (min-width: 768px) { .footer__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .footer__grid { grid-template-columns: 1.3fr 0.8fr 1.4fr 1.1fr; gap: var(--s-6); } }
+
+  .footer__logo { display: inline-flex; align-items: center; gap: var(--s-3); text-decoration: none; }
+  .footer__logo-text { display: grid; line-height: 1; }
+  .footer__name { font-family: var(--font-display); font-variation-settings: 'SOFT' 100; font-size: 1.75rem; font-weight: 600; }
+  .footer__sub { margin-top: 3px; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--areia); }
+  .footer__tag { margin: var(--s-4) 0; color: var(--areia); }
+  .footer__pill {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    margin: 0; padding: var(--s-2) var(--s-4);
+    border: 1px solid rgb(251 245 236 / 0.3); border-radius: var(--r-pill);
+    font-weight: 600; color: var(--creme);
+  }
+
+  .footer__h {
+    margin: 0 0 var(--s-4);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--areia);
+  }
+  .footer ul { list-style: none; display: grid; gap: 0; }
+  .footer nav ul a { display: inline-flex; min-height: 44px; min-width: 44px; align-items: center; }
+  address { font-style: normal; }
+  address li { display: flex; gap: var(--s-3); align-items: flex-start; padding-block: var(--s-2); }
+  address li :global(svg) { flex: none; margin-top: 2px; color: var(--mel); }
+  .footer__alert p { margin: 0; }
+
+  .footer__legal {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-2) var(--s-6);
+    border-top: 1px solid rgb(251 245 236 / 0.2);
+    padding-top: var(--s-5);
+    color: var(--areia);
+  }
+  .footer__legal p { margin: 0; max-width: none; }
+</style>

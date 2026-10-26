@@ -1,0 +1,34 @@
+---
+/** Rabisco de linha decorativo (coração com traço, folhas, pontos). */
+interface Props {
+  name: 'heart' | 'leaf' | 'swirl';
+  size?: number;
+  class?: string;
+}
+const { name, size = 64, class: className } = Astro.props;
+const art = {
+  heart:
+    '<path d="M30 52s-14-9-14-20a8 8 0 0 1 14-5 8 8 0 0 1 14 5c0 11-14 20-14 20Z"/><path d="M6 12c14-8 26-6 30 4" opacity=".7"/>',
+  leaf: '<path d="M10 54C10 30 26 12 52 10c0 26-16 44-42 44Z"/><path d="M10 54L40 24M26 38h12M32 32v12"/>',
+  swirl: '<path d="M6 40c10-24 34-30 46-12 8 12-6 22-16 16-8-5-4-16 6-14"/>',
+}[name];
+---
+
+<svg
+  class:list={['doodle', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 60 60"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={art}
+/>
+
+<style>
+  .doodle { color: var(--salvia); pointer-events: none; }
+</style>

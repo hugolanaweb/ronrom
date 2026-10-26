@@ -1,0 +1,15 @@
+---
+import Button from './Button.astro';
+import { whatsappUrl } from '../data/site';
+
+interface Props {
+  service?: string;
+  variant?: 'primary' | 'outline' | 'text' | 'light' | 'outline-light' | 'dark';
+  class?: string;
+}
+const { service, variant = 'primary', class: className } = Astro.props;
+---
+
+<Button href={whatsappUrl({ service })} variant={variant} external class={className}>
+  <slot>Agendar pelo WhatsApp</slot>
+</Button>

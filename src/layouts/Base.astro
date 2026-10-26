@@ -1,0 +1,119 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBookingBar from '../components/MobileBookingBar.astro';
+import { site } from '../data/site';
+import fraunces from '../assets/fonts/fraunces-soft.woff2?url';
+import figtree400 from '../assets/fonts/figtree-400.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Objetos JSON-LD adicionais (FAQPage, Article...). */
+  schema?: Record<string, unknown>[];
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+const { title, description, schema = [], type = 'website', noindex = false } = Astro.props;
+
+const fullTitle = Astro.url.pathname === '/' ? title : `${title} · ${site.brand}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+
+const veterinaryCare = {
+  '@context': 'https://schema.org',
+  '@type': 'VeterinaryCare',
+  name: site.name,
+  description: site.positioning,
+  url: site.url,
+  telephone: site.contact.phone,
+  email: site.contact.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.contact.address,
+    addressLocality: site.city,
+    addressRegion: site.state,
+    addressCountry: 'BR',
+  },
+  openingHours: `Mo-Sa ${site.contact.hours}`,
+};
+const jsonLd = [veterinaryCare, ...schema];
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; base-uri 'self'; object-src 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#FBF5EC" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preload" href={fraunces} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={figtree400} as="font" type="font/woff2" crossorigin />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <Header />
+    <main id="conteudo" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileBookingBar />
+
+    <script>
+      // Entrada de seções: fade + 12px, uma vez. Também dispara o arco das fotos.
+      const targets = document.querySelectorAll<HTMLElement>('.reveal, .reveal-host, .stagger');
+
+      // Cabeçalho ganha um filete ao rolar.
+      const header = document.querySelector<HTMLElement>('.header');
+      if (header) {
+        const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -5% 0px' },
+        );
+        targets.forEach((t) => io.observe(t));
+      } else {
+        targets.forEach((t) => t.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  main:focus { outline: none; }
+  @media (max-width: 767px) {
+    body { padding-bottom: 80px; }
+  }
+</style>

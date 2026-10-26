@@ -1,0 +1,26 @@
+---
+import { emergencyText } from '../data/site';
+---
+
+<aside class="emergency" aria-label="Aviso de emergência">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3 2.5 20h19L12 3Z" /><path d="M12 10v5M12 18h.01" />
+  </svg>
+  <p>{emergencyText}</p>
+</aside>
+
+<style>
+  .emergency {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    padding: var(--s-4) var(--s-5);
+    border: 2px solid var(--alerta);
+    border-radius: var(--r-md);
+    background: var(--creme);
+    color: var(--alerta);
+    font-weight: 600;
+  }
+  .emergency svg { flex: none; margin-top: 2px; }
+  .emergency p { margin: 0; }
+</style>

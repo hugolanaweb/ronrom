@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+---
+
+<Base title="Política de privacidade" description="Como a Ronrom trata os dados enviados no contato pelo WhatsApp.">
+  <PageHero eyebrow="Privacidade" title="Política de privacidade">
+    <p>Rascunho conceitual: este texto precisa ser revisado por responsável jurídico antes de qualquer uso real.</p>
+  </PageHero>
+
+  <section class="section section--areia" aria-label="Texto da política">
+    <div class="container">
+      <article class="prose surface reveal">
+        <h2>Quais dados recebemos</h2>
+        <p>
+          O site não tem formulário e não guarda dados de quem navega. Ao falar com a gente pelo WhatsApp, você
+          compartilha por conta própria as informações que escrever na conversa, como o nome do seu gato e a idade.
+        </p>
+
+        <h2>Para que usamos</h2>
+        <p>Usamos essas informações apenas para confirmar o horário e enviar o guia de preparo.</p>
+
+        <h2>Contato sobre seus dados</h2>
+        <p>
+          Para saber, corrigir ou excluir dados compartilhados na conversa, fale com {site.contact.email}.
+          Responsável: [nome do encarregado, a definir].
+        </p>
+
+        <p class="muted">Controlador: {site.name} · CNPJ {site.legal.cnpj}</p>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prose { max-width: 780px; margin-inline: auto; padding: var(--s-7); }
+  .prose :global(h2:first-child) { margin-top: 0; }
+</style>

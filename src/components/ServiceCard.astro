@@ -1,0 +1,62 @@
+---
+import { lifeStageLabels, serviceIcons, type Service } from '../data/site';
+import Icon from './Icon.astro';
+import WhatsAppLink from './WhatsAppLink.astro';
+
+interface Props {
+  service: Service;
+  /** Mostra o botão de WhatsApp com o nome do serviço. */
+  cta?: boolean;
+}
+const { service, cta = false } = Astro.props;
+---
+
+<li class="card lift" data-stages={service.stages.join(' ')}>
+  <span class="card__icon"><Icon name={serviceIcons[service.id]} size={30} /></span>
+  <h3><a class="card__link" href={`/servicos#${service.id}`}>{service.name}</a></h3>
+  <p class="card__summary">{service.summary}</p>
+  <p class="card__stages">{service.stages.map((s) => lifeStageLabels[s]).join(' · ')}</p>
+  <div class="card__foot">
+    <p class="card__price">{service.price}</p>
+    <span class="card__go" aria-hidden="true"><Icon name="arrow" size={18} /></span>
+  </div>
+  {cta && <WhatsAppLink service={service.name} variant="outline">Pedir pelo WhatsApp</WhatsAppLink>}
+</li>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-6);
+    background: var(--branco);
+    border: 1px solid #e7dccb;
+    border-radius: var(--r-md);
+    list-style: none;
+    position: relative;
+  }
+  .card:hover { border-color: var(--terracota); }
+  .card[hidden] { display: none; }
+  .card__icon { color: var(--terracota); margin-bottom: var(--s-2); }
+  .card h3 { font-size: 1.375rem; margin: 0; }
+  .card__link { color: var(--noite); text-decoration: none; }
+  .card__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--r-md); }
+  .card__link:focus-visible { outline-offset: 4px; }
+  .card__summary { color: var(--text-muted); font-size: 0.9375rem; flex: 1; margin: 0; }
+  .card__stages { margin: 0; font-size: 0.8125rem; color: var(--ardosia); }
+  .card__foot { display: flex; align-items: center; justify-content: space-between; margin-top: var(--s-3); }
+  .card__price {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--terracota-funda);
+  }
+  .card__go {
+    display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid #d9c9b2; color: var(--noite);
+    transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  }
+  .card:hover .card__go { background: var(--terracota); border-color: var(--terracota); color: var(--branco); }
+</style>

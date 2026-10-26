@@ -1,0 +1,40 @@
+---
+/** Bilhete manuscrito dentro de uma bolha orgânica. Decorativo: repete uma ideia já dita no texto. */
+interface Props {
+  tone?: 'sage' | 'areia' | 'dark';
+  class?: string;
+}
+const { tone = 'sage', class: className } = Astro.props;
+---
+
+<div class:list={['note', `note--${tone}`, className]}>
+  <p><slot /></p>
+</div>
+
+<style>
+  .note {
+    display: grid;
+    place-items: center;
+    width: 190px;
+    min-height: 120px;
+    padding: var(--s-5) var(--s-5);
+    border-radius: 58% 42% 52% 48% / 52% 46% 54% 48%;
+    text-align: center;
+    transform: rotate(-3deg);
+  }
+  .note p {
+    margin: 0;
+    font-family: var(--font-script);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .note--sage { background: #e3ece0; color: var(--salvia-profunda); }
+  .note--areia { background: var(--areia); color: var(--terracota-funda); }
+  .note--dark { background: rgb(251 245 236 / 0.1); color: var(--creme); }
+  @media (max-width: 480px) {
+    .note { width: 150px; min-height: 96px; padding: var(--s-4); }
+    .note p { font-size: 1.25rem; }
+  }
+</style>

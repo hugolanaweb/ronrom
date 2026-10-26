@@ -1,0 +1,98 @@
+---
+import type { ImageMetadata } from 'astro';
+import ArchImage from './ArchImage.astro';
+import Note from './Note.astro';
+import PurrWaves from './PurrWaves.astro';
+
+/**
+ * Abertura das páginas internas: mesma linguagem do hero da home
+ * (texto à esquerda, foto em forma orgânica com bilhete e ondas à direita).
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  imagePosition?: string;
+  ratio?: number;
+  shape?: 'arch' | 'blob-a' | 'blob-b' | 'blob-c';
+  /** Bilhete manuscrito sobre a foto. */
+  note?: string;
+}
+const {
+  eyebrow,
+  title,
+  image,
+  imageAlt = '',
+  imagePosition = 'center',
+  ratio = 1,
+  shape = 'blob-a',
+  note,
+} = Astro.props;
+const hasMedia = Boolean(image);
+---
+
+<section class:list={['section', 'section--creme', 'phero', hasMedia && 'phero--media']} aria-labelledby="page-title">
+  <div class="container phero__grid">
+    <div class="phero__text">
+      {eyebrow && <p class="tag phero__tag">{eyebrow}</p>}
+      <h1 id="page-title">{title}</h1>
+      <div class="phero__lead"><slot /></div>
+      <div class="phero__actions"><slot name="actions" /></div>
+    </div>
+    {
+      hasMedia && (
+        <div class="phero__media">
+          <PurrWaves class="phero__waves" />
+          <ArchImage src={image} alt={imageAlt} ratio={ratio} shape={shape} position={imagePosition} maxWidth={500} priority />
+          {note && <Note class="phero__note">{note}</Note>}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .phero {
+    background:
+      radial-gradient(55% 80% at 88% 35%, rgb(239 228 211 / 0.95) 0%, transparent 70%),
+      var(--creme);
+  }
+  .phero__grid { display: grid; gap: var(--s-7); align-items: center; position: relative; }
+  @media (min-width: 1024px) {
+    .phero--media .phero__grid { grid-template-columns: 6fr 5fr; gap: var(--s-7); }
+  }
+  .phero__text { position: relative; z-index: 2; max-width: 640px; }
+  .phero__tag { margin-bottom: var(--s-5); animation: rise 700ms var(--ease) both; }
+  .phero h1 {
+    font-size: clamp(2.5rem, 5vw, 3.875rem);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--s-5);
+    animation: rise 800ms 100ms var(--ease) both;
+  }
+  .phero__lead { font-size: 1.1875rem; animation: rise 800ms 220ms var(--ease) both; }
+  .phero__lead :global(p) { max-width: 52ch; }
+  .phero__lead :global(p:last-child) { margin-bottom: 0; }
+  .phero__actions { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); animation: rise 800ms 340ms var(--ease) both; }
+  .phero__actions:has(*) { margin-top: var(--s-6); }
+
+  .phero__media {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin-inline: auto;
+  }
+  @media (min-width: 1024px) {
+    .phero__media { margin-right: calc(var(--gutter) * -0.6); justify-self: end; }
+  }
+  .phero__media :global(.phero__waves) { left: 50%; top: 50%; translate: -50% -50%; }
+  .phero__media :global(.phero__note) { position: absolute; right: 0; bottom: 4%; z-index: 3; animation: rise 900ms 700ms var(--ease) both; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .phero__tag, .phero h1, .phero__lead, .phero__actions, .phero__media :global(.phero__note) { animation: none !important; }
+  }
+</style>

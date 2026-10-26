@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import FeatureList from '../components/FeatureList.astro';
+import CTASection from '../components/CTASection.astro';
+import { services, site } from '../data/site';
+import blanketNap from '../assets/photos/blanket-nap.jpg';
+
+const home = services.find((s) => s.id === 'atendimento-em-casa')!;
+---
+
+<Base
+  title="Atendimento em casa"
+  description="Vacinas, coletas e consultas simples no conforto de casa, para gatos para quem sair de casa é o maior problema."
+>
+  <PageHero
+    eyebrow={`Atendimento em casa · ${home.price}`}
+    title="Quando sair de casa é o maior problema."
+    note="No conforto de casa"
+    image={blanketNap}
+    imageAlt="Gato de olhos fechados, dormindo tranquilo envolto em uma manta macia"
+    imagePosition="50% 40%"
+  >
+    <p>
+      Para alguns gatos, a viagem até a clínica pesa mais do que a consulta. Nesses casos, parte do
+      cuidado pode acontecer em casa.
+    </p>
+    <Fragment slot="actions">
+      <Button href="/agendar">Agendar em casa</Button>
+      <Button href="#possivel-title" variant="outline">O que é possível</Button>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--areia" aria-labelledby="possivel-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Escopo</p>
+        <h2 id="possivel-title">O que dá para fazer em casa</h2>
+      </div>
+      <div class="cards cards--2 stagger">
+        <div class="surface lift">
+          <h3>É possível</h3>
+          <FeatureList items={home.includes} />
+        </div>
+        <div class="surface lift">
+          <h3>Não é possível</h3>
+          <FeatureList items={home.excludes} variant="x" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--creme" aria-labelledby="bairros-title">
+    <div class="container">
+      <div class="surface bairros reveal">
+        <div>
+          <p class="eyebrow">Onde atendemos</p>
+          <h2 id="bairros-title">Bairros atendidos</h2>
+        </div>
+        <p class="bairros__list">{site.homeServiceAreas}</p>
+      </div>
+    </div>
+  </section>
+
+  <CTASection service="Atendimento em casa" />
+</Base>
+
+<style>
+  .surface h3 { font-size: 1.25rem; margin-bottom: var(--s-4); }
+  .bairros { display: grid; gap: var(--s-4); align-items: center; padding: var(--s-7); }
+  @media (min-width: 768px) { .bairros { grid-template-columns: 1fr 1fr; } }
+  .bairros h2 { margin: 0; font-size: var(--fs-h3); }
+  .bairros__list { font-size: 1.25rem; font-weight: 600; margin: 0; }
+</style>

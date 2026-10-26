@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import EmergencyNotice from '../components/EmergencyNotice.astro';
+import { site, whatsappUrl } from '../data/site';
+import goldenPortrait from '../assets/photos/golden-portrait.jpg';
+
+const steps = [
+  { title: 'Você nos chama', text: 'A mensagem já vai preenchida. É só completar o nome do seu gato e a idade.' },
+  { title: 'Confirmamos o horário', text: 'Respondemos pelo WhatsApp para combinar o melhor horário.' },
+  { title: 'Enviamos o guia de preparo', text: 'Assim que confirmar, você recebe o guia para acostumar seu gato à caixa.' },
+];
+---
+
+<Base
+  title="Agendar consulta"
+  description="Agende pelo WhatsApp com a mensagem já preenchida. Confirmamos o horário e enviamos o guia de preparo."
+>
+  <PageHero
+    eyebrow="Agendar consulta"
+    title="Vamos marcar no ritmo dele?"
+    note="Sem pressa"
+    image={goldenPortrait}
+    imageAlt="Gato de olhos amarelos olhando para a câmera, iluminado por luz dourada"
+    imagePosition="50% 35%"
+  >
+    <p>
+      Chame a gente pelo WhatsApp. Confirmamos o horário e enviamos o guia de preparo assim que o
+      agendamento estiver combinado.
+    </p>
+    <Fragment slot="actions">
+      <Button href={whatsappUrl()} external>Agendar pelo WhatsApp</Button>
+      <Button href="/a-visita" variant="outline">Ver como é a visita</Button>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--areia" aria-labelledby="como-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Passo a passo</p>
+        <h2 id="como-title">Como funciona</h2>
+        <p class="lead">Seg. a sáb., {site.contact.hours} · {site.contact.neighborhood}, Porto Alegre</p>
+      </div>
+      <ol class="cards cards--3 stagger">
+        {
+          steps.map((s, i) => (
+            <li class="surface lift">
+              <span class="num" aria-hidden="true">{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p class="muted">{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--creme" aria-label="Aviso de emergência">
+    <div class="container">
+      <div class="reveal agendar__emergency"><EmergencyNotice /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .num {
+    display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: var(--s-4);
+    border-radius: 50%; background: var(--salvia-profunda); color: var(--branco); font-weight: 600;
+  }
+  .surface h3 { font-size: 1.375rem; margin-bottom: var(--s-2); }
+  .surface p { margin: 0; }
+  .agendar__emergency { max-width: 760px; }
+</style>

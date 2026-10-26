@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import FeatureList from '../components/FeatureList.astro';
+import FAQ from '../components/FAQ.astro';
+import CTASection from '../components/CTASection.astro';
+import ArchImage from '../components/ArchImage.astro';
+import { seniorSigns, services } from '../data/site';
+import curledBlanket from '../assets/photos/curled-blanket.jpg';
+import sunFloor from '../assets/photos/sun-floor.jpg';
+
+const senior = services.find((s) => s.id === 'programa-senior')!;
+
+const steps = [
+  { title: 'Avaliação', text: 'Uma consulta inicial para conhecer o gato e a rotina dele.' },
+  { title: 'Plano', text: 'Um plano de acompanhamento por escrito.' },
+  { title: 'Retornos', text: 'Retornos para acompanhar como ele está.' },
+  { title: 'Canal de dúvidas', text: 'Um canal para tirar dúvidas entre uma consulta e outra.' },
+];
+
+const faq = [
+  { q: 'A partir de que idade o gato entra no Programa Sênior?', a: 'A partir dos 10 anos.' },
+  {
+    q: 'Quanto custa o Programa Sênior?',
+    a: `${senior.price}. Exames extras, medicamentos e internação não estão incluídos e são informados antes de qualquer procedimento.`,
+  },
+  {
+    q: 'Meu gato idoso tem dificuldade de sair de casa. Há alternativa?',
+    a: 'Algumas coisas podem ser feitas em casa, como vacinas, coletas e consultas simples. Veja a página de atendimento em casa.',
+  },
+];
+---
+
+<Base
+  title="Gatos idosos · Programa Sênior"
+  description="Programa Sênior para gatos a partir dos 10 anos: avaliação, plano, retornos e canal de dúvidas. R$ 190/mês (valor fictício de referência)."
+>
+  <PageHero
+    eyebrow="Programa Sênior · R$ 190/mês"
+    title="Gato idoso não é gato doente. Mas precisa de mais atenção."
+    note="A partir dos 10 anos" shape="blob-c"
+    image={curledBlanket}
+    imageAlt="Gato enrolado para dormir entre mantas de lã verde e amarela"
+  >
+    <p>
+      A partir dos 10 anos, problemas renais, cardíacos e dentários costumam avançar em silêncio. O gato
+      não reclama: muda aos poucos.
+    </p>
+    <Fragment slot="actions">
+      <Button href="/agendar">Agendar avaliação</Button>
+      <Button href="#sinais-title" variant="outline">Ver os sinais</Button>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--areia" aria-labelledby="sinais-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Fique atento</p>
+        <h2 id="sinais-title">Sinais para observar</h2>
+        <p class="lead">Mudanças pequenas e graduais costumam ser o primeiro aviso.</p>
+      </div>
+      <ul class="sinais stagger">
+        {seniorSigns.map((s) => <li class="lift">{s}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--creme" aria-labelledby="como-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">O programa</p>
+        <h2 id="como-title">Como funciona</h2>
+      </div>
+      <ol class="cards cards--4 stagger">
+        {
+          steps.map((s, i) => (
+            <li class="surface lift">
+              <span class="num" aria-hidden="true">{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p class="muted">{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--areia" aria-labelledby="inclui-title">
+    <div class="container split">
+      <div class="reveal">
+        <div class="section-head">
+          <p class="eyebrow">Transparência</p>
+          <h2 id="inclui-title">O que inclui e o que não inclui</h2>
+        </div>
+        <div class="duo">
+          <div class="surface">
+            <h3>Inclui</h3>
+            <FeatureList items={senior.includes} />
+          </div>
+          <div class="surface">
+            <h3>Não inclui</h3>
+            <FeatureList items={senior.excludes} variant="x" />
+          </div>
+        </div>
+      </div>
+      <div class="split__media">
+        <ArchImage
+          src={sunFloor}
+          alt="Gato laranja relaxando no chão de casa, em uma faixa de sol"
+          position="40% 50%"
+          maxWidth={400}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--creme" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Dúvidas</p>
+        <h2 id="faq-title">Perguntas frequentes</h2>
+      </div>
+      <div class="reveal"><FAQ items={faq} /></div>
+    </div>
+  </section>
+
+  <CTASection service="Programa Sênior" />
+</Base>
+
+<style>
+  .sinais { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .sinais li {
+    padding: var(--s-3) var(--s-5);
+    border-radius: var(--r-pill);
+    background: var(--creme);
+    font-weight: 600;
+    border: 2px solid var(--salvia-profunda);
+    color: var(--noite);
+  }
+  .num {
+    display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: var(--s-4);
+    border-radius: 50%; background: var(--salvia-profunda); color: var(--branco); font-weight: 600;
+  }
+  .surface h3 { font-size: 1.25rem; margin-bottom: var(--s-2); }
+  .surface p { margin: 0; }
+  .duo { display: grid; gap: var(--s-4); }
+  @media (min-width: 640px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .duo .surface h3 { margin-bottom: var(--s-4); }
+</style>

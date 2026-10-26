@@ -1,0 +1,78 @@
+---
+import { lifeStageLabels, services, servicesNote } from '../data/site';
+import ServiceCard from './ServiceCard.astro';
+
+const options = [{ value: 'todos', label: 'Todos' }, ...Object.entries(lifeStageLabels).map(([value, label]) => ({ value, label }))];
+---
+
+<div class="filter" data-filter>
+  <div class="filter__top">
+    <div class="filter__head"><slot /></div>
+    <div class="filter__chips" role="group" aria-label="Filtrar serviços por fase de vida" hidden>
+      {
+        options.map((o) => (
+          <button type="button" class="chip" data-value={o.value} aria-pressed={o.value === 'todos' ? 'true' : 'false'}>
+            {o.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+  <p class="visually-hidden" role="status" aria-live="polite" data-filter-status></p>
+  <ul class="filter__list">
+    {services.map((s) => <ServiceCard service={s} />)}
+  </ul>
+  <p class="filter__note muted">{servicesNote}</p>
+</div>
+
+<style>
+  .filter__top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--s-5) var(--s-6); margin-bottom: var(--s-7); }
+  .filter__head { max-width: 560px; }
+  .filter__head :global(.section-head) { margin-bottom: 0; }
+  .filter__chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .filter__chips[hidden] { display: none; }
+  .chip {
+    min-height: 44px;
+    padding: 0 var(--s-5);
+    border-radius: var(--r-pill);
+    border: 1.5px solid #d9c9b2;
+    background: var(--creme);
+    color: var(--noite);
+    font: 600 0.9375rem/1 var(--font-body);
+    cursor: pointer;
+    transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  }
+  .chip:hover { border-color: var(--salvia-profunda); }
+  .chip[aria-pressed='true'] { background: var(--salvia-profunda); border-color: var(--salvia-profunda); color: var(--branco); }
+  .filter__list { list-style: none; display: grid; gap: var(--s-5); }
+  @media (min-width: 640px) { .filter__list { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .filter__list { grid-template-columns: repeat(3, 1fr); } }
+  .filter__note { margin-top: var(--s-6); font-size: var(--fs-small); }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-filter]');
+  if (root) {
+    const chips = root.querySelector<HTMLElement>('.filter__chips')!;
+    const buttons = Array.from(chips.querySelectorAll<HTMLButtonElement>('.chip'));
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('.card'));
+    const status = root.querySelector<HTMLElement>('[data-filter-status]')!;
+    chips.hidden = false;
+
+    const apply = (value: string) => {
+      let shown = 0;
+      cards.forEach((card) => {
+        const match = value === 'todos' || (card.dataset.stages ?? '').split(' ').includes(value);
+        card.hidden = !match;
+        if (match) shown++;
+      });
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.value === value)));
+      const label = buttons.find((b) => b.dataset.value === value)?.textContent?.trim().toLowerCase();
+      status.textContent =
+        value === 'todos'
+          ? `Mostrando todos os ${shown} serviços.`
+          : `${shown} ${shown === 1 ? 'serviço' : 'serviços'} para a fase ${label}.`;
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.value!)));
+  }
+</script>

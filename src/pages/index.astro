@@ -1,0 +1,332 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import ArchImage from '../components/ArchImage.astro';
+import PurrWaves from '../components/PurrWaves.astro';
+import Icon from '../components/Icon.astro';
+import Note from '../components/Note.astro';
+import Doodle from '../components/Doodle.astro';
+import VisitTrail from '../components/VisitTrail.astro';
+import LifeStageFilter from '../components/LifeStageFilter.astro';
+import WhatsAppLink from '../components/WhatsAppLink.astro';
+import FAQ from '../components/FAQ.astro';
+import CTASection from '../components/CTASection.astro';
+import { homeFaq, seniorSigns, site, spaceFeatures } from '../data/site';
+
+import heroCarrier from '../assets/photos/hero-carrier.jpg';
+import windowSleep from '../assets/photos/window-sleep.jpg';
+import curledBlanket from '../assets/photos/curled-blanket.jpg';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: homeFaq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const pillars = [
+  { icon: 'cat', title: 'Só gatos', text: 'Sem latidos, sem cheiro de cães.' },
+  { icon: 'clock', title: 'Sem pressa', text: '40 minutos por consulta, horários espaçados.' },
+  { icon: 'shield', title: 'Sem surpresas', text: 'Passo a passo e plano por escrito.' },
+] as const;
+---
+
+<Base
+  title="Ronrom Clínica Felina · Medicina felina no ritmo do gato"
+  description="Clínica veterinária só para gatos em Porto Alegre. Consultas de 40 minutos, sala de espera sem cães e manejo pensado para reduzir o estresse."
+  schema={[faqSchema]}
+>
+  <!-- 1. Hero -->
+  <section class="section section--creme hero" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <p class="tag hero__tag"><Icon name="paw" size={16} /> Clínica só para gatos · Porto Alegre</p>
+        <h1 id="hero-title">Medicina felina <span class="accent">no ritmo do gato.</span></h1>
+        <p class="lead hero__lead">
+          Consultas de 40 minutos, sala de espera sem cães e um manejo pensado para seu gato sentir menos
+          medo. Você sabe o que vai acontecer antes de sair de casa.
+        </p>
+        <div class="hero__actions">
+          <Button href="/agendar">Agendar consulta <Icon name="calendar" size={18} /></Button>
+          <Button href="/a-visita" variant="outline">Ver como é a visita <Icon name="arrow" size={18} /></Button>
+        </div>
+        <p class="hero__meta">
+          <Icon name="pin" size={18} /> Seg. a sáb., {site.contact.hours} · {site.contact.neighborhood}, Porto Alegre
+        </p>
+      </div>
+
+      <div class="hero__media">
+        <PurrWaves class="hero__waves" />
+        <ArchImage
+          src={heroCarrier}
+          alt="Gato laranja deitado dentro da caixa de transporte, com luz de sol entrando de lado"
+          shape="blob-a"
+          ratio={1.02}
+          maxWidth={620}
+          position="center 55%"
+          priority
+        />
+        <Note class="hero__note">Sala de espera só de gatos</Note>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Proposta -->
+  <section class="section section--areia" aria-labelledby="proposta-title">
+    <div class="container proposta">
+      <div class="section-head reveal proposta__head">
+        <p class="eyebrow">Nossa proposta</p>
+        <h2 id="proposta-title">Se a última consulta foi um drama, a culpa não é do seu gato.</h2>
+        <p>
+          Gatos sentem o ambiente antes de qualquer exame: o cheiro de outros animais, o barulho, a pressa.
+          Na Ronrom, tudo isso foi tirado da equação. Sobra o que importa: tempo para examinar com cuidado
+          e explicar com clareza.
+        </p>
+      </div>
+      <ul class="pillars stagger">
+        {
+          pillars.map((p) => (
+            <li>
+              <span class="pillars__icon"><Icon name={p.icon} size={34} /></span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Trilha da visita -->
+  <section class="section section--creme" aria-labelledby="trilha-title">
+    <div class="container reveal">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">Como funciona</p>
+        <h2 id="trilha-title">Sua visita, do sofá de casa ao sofá de casa.</h2>
+      </div>
+      <VisitTrail />
+      <p class="trilha__cta"><Button href="/a-visita" variant="outline">Ver a visita em detalhes <Icon name="arrow" size={18} /></Button></p>
+    </div>
+  </section>
+
+  <!-- 4. Serviços -->
+  <section class="section section--areia" aria-labelledby="servicos-title">
+    <div class="container reveal">
+      <LifeStageFilter>
+        <div class="section-head">
+          <p class="eyebrow">Cuidado para cada fase</p>
+          <h2 id="servicos-title">Cuidado para cada fase da vida dele.</h2>
+        </div>
+      </LifeStageFilter>
+      <p class="servicos__more"><Button href="/servicos" variant="text">Ver detalhes de cada serviço</Button></p>
+    </div>
+  </section>
+
+  <!-- 5. Espaço -->
+  <section class="section section--noite espaco" aria-labelledby="espaco-title">
+    <Doodle name="leaf" size={120} class="espaco__leaf" />
+    <div class="container grid-2 grid-2--wide-right">
+      <div class="espaco__media reveal">
+        <ArchImage
+          src={windowSleep}
+          alt="Gato laranja dormindo no parapeito de uma janela, com luz de sol lateral"
+          ratio={4 / 5}
+          maxWidth={380}
+          position="55% 55%"
+        />
+        <Note tone="dark" class="espaco__note">Pausamos quando ele precisa</Note>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">O espaço</p>
+        <h2 id="espaco-title">Um espaço desenhado para quem tem bigodes.</h2>
+        <ul class="features stagger">
+          {
+            spaceFeatures.map((f) => (
+              <li>
+                <span class="features__icon"><Icon name={f.icon} size={26} /></span>
+                <span>{f.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Programa Sênior -->
+  <section class="section section--creme" aria-labelledby="senior-title">
+    <div class="container grid-2 grid-2--wide-left">
+      <div class="reveal">
+        <p class="eyebrow">Programa Sênior</p>
+        <h2 id="senior-title">Gato idoso não é gato doente. Mas precisa de mais atenção.</h2>
+        <p>
+          A partir dos 10 anos, problemas renais, cardíacos e dentários costumam avançar em silêncio. O
+          gato não reclama: muda aos poucos. Por isso o acompanhamento regular faz diferença.
+        </p>
+        <p class="senior__label">Sinais para observar</p>
+        <ul class="pills">
+          {seniorSigns.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="senior__cta"><Button href="/gatos-idosos">Conhecer o Programa Sênior <Icon name="arrow" size={18} /></Button></p>
+      </div>
+      <div class="senior__media reveal">
+        <ArchImage
+          src={curledBlanket}
+          alt="Gato enrolado para dormir entre mantas de lã verde e amarela"
+          shape="blob-b"
+          ratio={1.02}
+          maxWidth={480}
+          position="center 45%"
+        />
+        <Note tone="areia" class="senior__note">A partir dos 10 anos</Note>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Quem cuida -->
+  <section class="section section--areia" aria-labelledby="equipe-title">
+    <div class="container team reveal">
+      <ArchImage
+        class="team__photo"
+        alt="Moldura reservada para a foto da equipe (pendente)"
+        ratio={3 / 4}
+        maxWidth={240}
+        caption={site.team.photoCaption}
+      />
+      <div>
+        <p class="eyebrow">Equipe</p>
+        <h2 id="equipe-title">Quem cuida</h2>
+        <p class="team__name">
+          {site.team.name} · {site.team.role} · {site.team.crmv}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. FAQ -->
+  <section class="section section--creme" aria-labelledby="faq-title">
+    <div class="container faq-wrap">
+      <div class="reveal">
+        <div class="section-head">
+          <p class="eyebrow">Dúvidas</p>
+          <h2 id="faq-title">Perguntas frequentes</h2>
+        </div>
+        <FAQ items={homeFaq} />
+      </div>
+      <aside class="faq-card reveal" aria-label="Fale com a gente">
+        <span class="faq-card__icon"><Icon name="chat" size={34} /></span>
+        <h3>Ainda tem dúvidas?</h3>
+        <p>Chame a gente pelo WhatsApp.</p>
+        <WhatsAppLink variant="dark"><Icon name="whatsapp" size={20} /> Falar no WhatsApp</WhatsAppLink>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 9. CTA final -->
+  <CTASection />
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    background:
+      radial-gradient(55% 70% at 85% 35%, rgb(239 228 211 / 0.95) 0%, transparent 70%),
+      var(--creme);
+  }
+  .hero__grid { display: grid; gap: var(--s-7); align-items: center; position: relative; }
+  @media (min-width: 1024px) {
+    .hero__grid { grid-template-columns: 6fr 6fr; gap: var(--s-6); }
+  }
+  .hero__text { position: relative; z-index: 2; }
+  .hero__tag { margin-bottom: var(--s-5); animation: rise 700ms var(--ease) both; }
+  .hero__text h1 {
+    font-size: clamp(2.5rem, 5.6vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--s-5);
+    animation: rise 800ms 100ms var(--ease) both;
+  }
+  .accent { color: var(--terracota); display: block; }
+  .hero__lead { max-width: 46ch; animation: rise 800ms 220ms var(--ease) both; }
+  .hero__actions {
+    display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4);
+    margin-top: var(--s-6);
+    animation: rise 800ms 340ms var(--ease) both;
+  }
+  .hero__meta {
+    display: flex; align-items: center; gap: var(--s-2);
+    margin: var(--s-5) 0 0; font-size: var(--fs-small); color: var(--text-muted);
+    animation: rise 800ms 440ms var(--ease) both;
+  }
+  .hero__meta :global(svg) { color: var(--terracota); flex: none; }
+
+  .hero__media { position: relative; display: grid; place-items: center; width: 100%; max-width: 620px; margin-inline: auto; }
+  @media (min-width: 1024px) {
+    .hero__media { margin-right: calc(var(--gutter) * -1); max-width: 660px; justify-self: end; }
+  }
+  .hero__media :global(.hero__waves) { left: 50%; top: 50%; translate: -50% -50%; }
+  .hero__media :global(.hero__note) { position: absolute; right: 2%; bottom: 4%; z-index: 3; animation: rise 900ms 700ms var(--ease) both, float 7s 1.6s ease-in-out infinite; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__tag, .hero__text h1, .hero__lead, .hero__actions, .hero__meta,
+    .hero__media :global(.hero__note) { animation: none !important; }
+  }
+
+  /* ---------- Proposta ---------- */
+  .proposta { display: grid; gap: var(--s-7); align-items: center; }
+  @media (min-width: 1024px) { .proposta { grid-template-columns: 6fr 6fr; gap: var(--s-8); } }
+  .proposta__head { margin-bottom: 0; }
+  .pillars { list-style: none; display: grid; gap: var(--s-6); }
+  @media (min-width: 640px) { .pillars { grid-template-columns: repeat(3, 1fr); gap: var(--s-5); } }
+  .pillars__icon { display: inline-block; margin-bottom: var(--s-3); color: var(--terracota); }
+  .pillars h3 { font-family: var(--font-body); font-variation-settings: normal; font-size: 1.0625rem; font-weight: 600; margin-bottom: var(--s-1); }
+  .pillars p { margin: 0; color: var(--text-muted); font-size: 0.9375rem; }
+
+  .trilha__cta { margin: var(--s-7) 0 0; text-align: center; max-width: none; }
+  .servicos__more { margin: var(--s-4) 0 0; }
+
+  /* ---------- Espaço ---------- */
+  .espaco :global(.espaco__leaf) { position: absolute; right: 4%; top: 22%; color: rgb(143 169 138 / 0.55); }
+  .espaco__media { position: relative; }
+  .espaco__media :global(.espaco__note) { position: absolute; right: -2%; bottom: 8%; z-index: 2; }
+  @media (min-width: 1024px) { .espaco__media :global(.espaco__note) { right: -12%; } }
+  .section--noite h2 { max-width: 16ch; }
+  .features { list-style: none; display: grid; gap: var(--s-4) var(--s-6); margin-top: var(--s-6); }
+  @media (min-width: 640px) { .features { grid-template-columns: 1fr 1fr; } }
+  .features li { display: flex; align-items: center; gap: var(--s-3); }
+  .features__icon {
+    display: grid; place-items: center; flex: none; width: 48px; height: 48px;
+    border-radius: 50%; border: 1.5px solid rgb(232 176 74 / 0.6); color: var(--mel);
+  }
+
+  /* ---------- Sênior ---------- */
+  .senior__label { margin: var(--s-5) 0 var(--s-3); font-weight: 600; }
+  .senior__cta { margin: var(--s-6) 0 0; }
+  .senior__media { position: relative; }
+  .senior__media :global(.senior__note) { position: absolute; right: 0; bottom: 6%; z-index: 2; }
+
+  /* ---------- Equipe ---------- */
+  .team { display: grid; gap: var(--s-6); align-items: center; }
+  .team :global(.team__photo) { max-width: 240px; width: 100%; }
+  @media (min-width: 768px) { .team { grid-template-columns: 240px 1fr; gap: var(--s-8); } }
+  .team__name { font-size: 1.25rem; font-weight: 600; margin: 0; }
+
+  /* ---------- FAQ ---------- */
+  .faq-wrap { display: grid; gap: var(--s-7); align-items: start; }
+  @media (min-width: 1024px) { .faq-wrap { grid-template-columns: 7fr 4fr; gap: var(--s-8); } }
+  .faq-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--s-8) var(--s-6);
+    background: #e3ece0;
+    border-radius: 58% 42% 52% 48% / 46% 44% 56% 54%;
+  }
+  @media (max-width: 1023px) { .faq-card { border-radius: var(--r-md); } }
+  .faq-card__icon { color: var(--salvia-profunda); margin-bottom: var(--s-3); }
+  .faq-card h3 { margin-bottom: var(--s-2); font-size: 1.5rem; }
+  .faq-card p { margin: 0 0 var(--s-5); }
+</style>

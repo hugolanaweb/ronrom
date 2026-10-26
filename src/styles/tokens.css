@@ -1,0 +1,105 @@
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../assets/fonts/fraunces-soft.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../assets/fonts/figtree-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../assets/fonts/figtree-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* Paleta */
+  --creme: #fbf5ec;
+  --areia: #efe4d3;
+  --terracota: #b2532e;
+  --terracota-funda: #8f3f21;
+  --noite: #22303a;
+  --ardosia: #5a6670;
+  --salvia: #8fa98a;
+  --salvia-profunda: #4f6b52;
+  --mel: #e8b04a;
+  --alerta: #b3261e;
+  --branco: #ffffff;
+
+  /* Papéis semânticos */
+  --bg: var(--creme);
+  --surface: var(--areia);
+  --text: var(--noite);
+  --text-muted: var(--ardosia);
+  --primary: var(--terracota);
+  --primary-hover: var(--terracota-funda);
+
+  /* Tipografia */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-h1: clamp(2.5rem, 5vw, 4rem);
+  --fs-h2: clamp(2rem, 3.4vw, 2.75rem);
+  --fs-h3: clamp(1.5rem, 2.4vw, 1.75rem);
+  --fs-body: clamp(1.0625rem, 0.6vw + 0.95rem, 1.125rem);
+  --fs-small: 0.9375rem;
+  --lh-body: 1.6;
+  --lh-title: 1.1;
+  --measure: 65ch;
+
+  /* Espaços */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 128px;
+
+  /* Raios */
+  --r-sm: 8px;
+  --r-md: 20px;
+  --r-pill: 999px;
+  --r-arch: 999px 999px 20px 20px;
+
+  /* Movimento */
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --t-fast: 200ms;
+  --t-base: 400ms;
+  --t-wave: 3000ms;
+
+  /* Layout */
+  --container: 1200px;
+  --gutter: 24px;
+  --btn-h: 48px;
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 5px var(--noite);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 48px;
+  }
+}
+
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../assets/fonts/caveat-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+:root { --font-script: 'Caveat', 'Segoe Script', cursive; }

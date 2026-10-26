@@ -1,0 +1,26 @@
+---
+import Button from './Button.astro';
+import { whatsappUrl } from '../data/site';
+---
+
+<div class="booking-bar" role="region" aria-label="Agendamento rápido">
+  <Button href="/agendar">Agendar</Button>
+  <Button href={whatsappUrl()} variant="outline" external>WhatsApp</Button>
+</div>
+
+<style>
+  .booking-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 90;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4) calc(var(--s-3) + env(safe-area-inset-bottom));
+    background: rgb(251 245 236 / 0.97);
+    border-top: 1px solid var(--areia);
+  }
+  @media (min-width: 768px) {
+    .booking-bar { display: none; }
+  }
+</style>

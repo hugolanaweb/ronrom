@@ -1,0 +1,170 @@
+---
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ArchImage from '../components/ArchImage.astro';
+import FeatureList from '../components/FeatureList.astro';
+import CTASection from '../components/CTASection.astro';
+import Button from '../components/Button.astro';
+import { bring, principles, visitSteps } from '../data/site';
+
+import carrierCloseup from '../assets/photos/carrier-closeup.jpg';
+import carrierHome from '../assets/photos/carrier-home.jpg';
+import heroCarrier from '../assets/photos/hero-carrier.jpg';
+import examTable from '../assets/photos/exam-table.jpg';
+import tabbyFloor from '../assets/photos/tabby-floor.jpg';
+import sunFloor from '../assets/photos/sun-floor.jpg';
+
+const stepShapes = ['blob-b', 'arch', 'blob-c', 'arch', 'blob-a'] as const;
+const photos: Record<string, { src: ImageMetadata; alt: string; position?: string }> = {
+  antes: {
+    src: carrierHome,
+    alt: 'Gato laranja sentado no chão de madeira ao lado de uma caixa de transporte, em casa',
+    position: '50% 78%',
+  },
+  chegada: {
+    src: heroCarrier,
+    alt: 'Gato laranja deitado dentro de uma caixa de transporte, com luz de sol entrando de lado',
+    position: 'center 58%',
+  },
+  consulta: {
+    src: examTable,
+    alt: 'Gato laranja sobre a mesa de exame, apoiado com cuidado por mãos de uma profissional',
+    position: '50% 50%',
+  },
+  conversa: {
+    src: tabbyFloor,
+    alt: 'Gato rajado deitado no chão de madeira, olhando para a frente com calma',
+    position: '55% 60%',
+  },
+  depois: {
+    src: sunFloor,
+    alt: 'Gato laranja relaxando no chão de casa, em uma faixa de sol',
+    position: '40% 50%',
+  },
+};
+---
+
+<Base
+  title="A visita"
+  description="Como é cada etapa da consulta na Ronrom: do preparo em casa ao plano por e-mail, com manejo de baixo estresse para gatos."
+>
+  <PageHero
+    eyebrow="A visita"
+    title="O que acontece quando você traz seu gato."
+    note="Explicamos antes de fazer"
+    image={carrierCloseup}
+    imageAlt="Gato laranja e branco olhando para a frente de dentro de uma caixa de transporte"
+    imagePosition="46% 50%"
+  >
+    <p>Cinco etapas, todas pensadas para que seu gato sinta menos medo e você saiba o que esperar.</p>
+    <Fragment slot="actions">
+      <Button href="/agendar">Agendar consulta</Button>
+      <Button href="#etapa-antes" variant="outline">Ver as etapas</Button>
+    </Fragment>
+  </PageHero>
+
+  {
+    visitSteps.map((step, i) => {
+      const photo = photos[step.id];
+      return (
+        <section
+          class:list={['section', i % 2 === 0 ? 'section--areia' : 'section--creme']}
+          aria-labelledby={`etapa-${step.id}`}
+          id={`etapa-${step.id}-secao`}
+        >
+          <div class:list={['container', 'split', i % 2 === 1 && 'split--flip']}>
+            <div class="reveal etapa__text">
+              <span class="etapa__n" aria-hidden="true">{i + 1}</span>
+              <p class="eyebrow">Etapa {i + 1} de {visitSteps.length}</p>
+              <h2 id={`etapa-${step.id}`}>{step.title}</h2>
+              <p class="lead">{step.long}</p>
+            </div>
+            <div class="split__media">
+              <ArchImage src={photo.src} alt={photo.alt} position={photo.position} shape={stepShapes[i]} ratio={stepShapes[i] === 'arch' ? 4 / 5 : 1} maxWidth={440} />
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <section class="section section--noite" aria-labelledby="principios-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Manejo de baixo estresse</p>
+        <h2 id="principios-title">Como cuidamos do seu gato</h2>
+      </div>
+      <ul class="cards cards--4 stagger principios">
+        {
+          principles.map((p, i) => (
+            <li class="principio lift">
+              <span class="principio__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <p>{p}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--creme" aria-labelledby="trazer-title">
+    <div class="container split">
+      <div class="reveal">
+        <p class="eyebrow">Para a consulta</p>
+        <h2 id="trazer-title">O que trazer</h2>
+        <FeatureList items={bring} />
+      </div>
+      <div class="surface reveal trazer__note">
+        <p class="eyebrow">Depois do agendamento</p>
+        <p>
+          Enviamos o guia de preparo para você acostumar seu gato à caixa de transporte antes do dia da
+          consulta.
+        </p>
+        <Button href="/guias/caixa-de-transporte" variant="text">Ler o guia da caixa de transporte</Button>
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</Base>
+
+<style>
+  .etapa__text { position: relative; }
+  .etapa__n {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--s-5);
+    border-radius: 50%;
+    background: var(--salvia-profunda);
+    color: var(--branco);
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .etapa__text h2 { margin-bottom: var(--s-4); }
+  .etapa__text .lead { max-width: 46ch; margin: 0; }
+
+  .principios { margin-top: 0; }
+  .principio {
+    padding: var(--s-6);
+    border-radius: var(--r-md);
+    background: rgb(251 245 236 / 0.07);
+    border: 1px solid rgb(251 245 236 / 0.16);
+  }
+  .principio:hover { background: rgb(251 245 236 / 0.12); }
+  .principio__n {
+    display: block;
+    margin-bottom: var(--s-4);
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--mel);
+  }
+  .principio p { margin: 0; font-size: 1.1875rem; color: var(--creme); }
+  .trazer__note p { max-width: 40ch; }
+</style>
