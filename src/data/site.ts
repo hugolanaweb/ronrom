@@ -129,6 +129,7 @@ export const servicesNote =
   'Valores de referência. Exames e medicamentos extras são informados antes de qualquer procedimento.';
 
 export const nav = [
+  { href: '/', label: 'Início' },
   { href: '/a-visita', label: 'A visita' },
   { href: '/servicos', label: 'Serviços' },
   { href: '/gatos-idosos', label: 'Gatos idosos' },

@@ -5,7 +5,7 @@ import CatMark from './CatMark.astro';
 import Icon from './Icon.astro';
 
 const current = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isCurrent = (href: string) => current === href || current.startsWith(href + '/');
+const isCurrent = (href: string) => (href === '/' ? current === '/' : current === href || current.startsWith(href + '/'));
 ---
 
 <header class="header">
